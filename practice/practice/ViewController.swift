@@ -20,6 +20,9 @@ class ViewController: UIViewController {
     let textView2 = CustomTextView(textViewType: .textinsideCircle)
     let textView3 = CustomTextView(textViewType: .imgInsideCircle)
     lazy var imageNames = getProfilePhotoNames(count: 5)
+    
+    var collectionView: UICollectionView!
+    
 //    @IBAction func reset(_ sender: Any) {
 //        imgView.image = nil
 //        progView.rate = 0
@@ -62,11 +65,53 @@ class ViewController: UIViewController {
         
     }
     
+    func overlapScrollView() {
+        let st = OverlappingScrollView(imageNames: imageNames, itemSize: 100)
+        
+        view.addSubview(st)
+        st.translatesAutoresizingMaskIntoConstraints = false
+        st.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        st.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+
+        st.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        st.heightAnchor.constraint(equalToConstant: 100).isActive = true
+    }
+    
+    
+    
+    private func setupCollectionView() {
+        let layout = CustomZoominoutlayout()
+        
+        layout.itemSize = CGSize(width: 200, height: 200)
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0   
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(PagingCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        
+        self.view.addSubview(collectionView)
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        collectionView.heightAnchor.constraint(equalToConstant: 250).isActive = true
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        overlapStack()
-
         
+        setupCollectionView()
+        
+//        overlapStack()
+//        overlapScrollView()
 //        let overlapVC = CollectionViewController(imageNames: imageNames)
 //        self.addChild(overlapVC)
 //        self.view.addSubview(overlapVC.view)
@@ -157,3 +202,18 @@ class ViewController: UIViewController {
 //    
 //    
 //}
+
+extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PagingCollectionViewCell
+        
+        cell.imageTitleText = "test title"
+        cell.bgImage = UIImage(named: "profile_photo_1")
+        
+        return cell
+    }
+}
