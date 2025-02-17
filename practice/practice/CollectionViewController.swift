@@ -27,7 +27,6 @@ class CollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.collectionView!.register(ImageCell.self, forCellWithReuseIdentifier: reuseIdentifier)
     }
     
