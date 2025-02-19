@@ -13,15 +13,28 @@ import UIKit
 class ViewController: UIViewController {
 
     
+    
+    @IBOutlet weak var transitTableView: UITableView!
+    
     let custom = CustomView()
     var progView = ProgressBarView()
     let heartButton = HeartButton()
     let textView1 = CustomTextView(textViewType: .textOutsideCircle)
     let textView2 = CustomTextView(textViewType: .textinsideCircle)
     let textView3 = CustomTextView(textViewType: .imgInsideCircle)
-    lazy var imageNames = getProfilePhotoNames(count: 5)
+//    lazy var imageNames = getProfilePhotoNames(count: 5)
     
     var collectionView: UICollectionView!
+    
+    var selectedImage: UIImage?
+    var selectedImageFrame: CGRect?
+    var selectedLabelFrame: CGRect?
+    var selectedString: String?
+    
+    func tableView() {
+        transitTableView.delegate = self
+        transitTableView.dataSource = self
+    }
     
 //    @IBAction func reset(_ sender: Any) {
 //        imgView.image = nil
@@ -38,77 +51,78 @@ class ViewController: UIViewController {
 //    }
     
     
+//    
+//    func getProfilePhotoNames(count: Int) -> [String] {
+//        var imageNames = [String]()
+//        
+//        for i in 1...count {
+//            let imageName = "profile_photo_\(i)"
+//            
+//            if let _ = UIImage(named: imageName) {
+//                imageNames.append(imageName)
+//            }
+//        }
+//        
+//        return imageNames
+//    }
+//    
+//    func overlapStack() {
+//        let st = OverlappingStack(imageNames: imageNames, itemSize: 100)
+//        view.addSubview(st)
+//        st.translatesAutoresizingMaskIntoConstraints = false
+//        st.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        st.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+//
+//        st.widthAnchor.constraint(equalToConstant: 300).isActive = true
+//        st.heightAnchor.constraint(equalToConstant: 300).isActive = true
+//        
+//    }
+//    
+//    func overlapScrollView() {
+//        let st = OverlappingScrollView(imageNames: imageNames, itemSize: 100)
+//        
+//        view.addSubview(st)
+//        st.translatesAutoresizingMaskIntoConstraints = false
+//        st.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        st.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+//
+//        st.widthAnchor.constraint(equalToConstant: 300).isActive = true
+//        st.heightAnchor.constraint(equalToConstant: 100).isActive = true
+//    }
+//    
     
-    func getProfilePhotoNames(count: Int) -> [String] {
-        var imageNames = [String]()
-        
-        for i in 1...count {
-            let imageName = "profile_photo_\(i)"
-            
-            if let _ = UIImage(named: imageName) {
-                imageNames.append(imageName)
-            }
-        }
-        
-        return imageNames
-    }
     
-    func overlapStack() {
-        let st = OverlappingStack(imageNames: imageNames, itemSize: 100)
-        view.addSubview(st)
-        st.translatesAutoresizingMaskIntoConstraints = false
-        st.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        st.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-
-        st.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        st.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        
-    }
-    
-    func overlapScrollView() {
-        let st = OverlappingScrollView(imageNames: imageNames, itemSize: 100)
-        
-        view.addSubview(st)
-        st.translatesAutoresizingMaskIntoConstraints = false
-        st.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        st.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-
-        st.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        st.heightAnchor.constraint(equalToConstant: 100).isActive = true
-    }
-    
-    
-    
-    private func setupCollectionView() {
-        let layout = CustomZoominoutlayout()
-        
-        layout.itemSize = CGSize(width: 200, height: 200)
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0   
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(PagingCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-        
-        self.view.addSubview(collectionView)
-        
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
-        collectionView.heightAnchor.constraint(equalToConstant: 250).isActive = true
-        
-    }
+//    private func setupCollectionView() {
+//        let layout = CustomZoominoutlayout()
+//        
+//        layout.itemSize = CGSize(width: 200, height: 200)
+//        layout.scrollDirection = .horizontal
+//        layout.minimumLineSpacing = 0   
+//        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+//        collectionView.decelerationRate = UIScrollView.DecelerationRate.fast
+//        collectionView.delegate = self
+//        collectionView.dataSource = self
+//        collectionView.register(PagingCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+//        
+//        self.view.addSubview(collectionView)
+//        
+//        collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        collectionView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        collectionView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+//        
+//        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+//        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+//        
+//        collectionView.heightAnchor.constraint(equalToConstant: 250).isActive = true
+//        
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView()
         
-        setupCollectionView()
+//        setupCollectionView()
         
 //        overlapStack()
 //        overlapScrollView()
@@ -203,17 +217,54 @@ class ViewController: UIViewController {
 //    
 //}
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+//extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return 10
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PagingCollectionViewCell
+//        
+//        cell.imageTitleText = "test title"
+//        cell.bgImage = UIImage(named: "profile_photo_1")
+//        
+//        return cell
+//    }
+//}
+
+
+
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 30
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PagingCollectionViewCell
-        
-        cell.imageTitleText = "test title"
-        cell.bgImage = UIImage(named: "profile_photo_1")
-        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TableImageCell", for: indexPath) as! TableImageCell
+        cell.leftIamgeView.image = UIImage(named: "fashion\(indexPath.row % 18 + 1)")
+        cell.middleLabel.text = "Fashion\(indexPath.row + 1)"
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detail = self.storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        detail.transitioningDelegate = self
+        detail.modalPresentationStyle = .custom
+        
+        let cell = tableView.cellForRow(at: indexPath) as! TableImageCell
+        self.selectedImage = cell.leftIamgeView.image
+        self.selectedLabelFrame = cell.middleLabel.convert(cell.middleLabel.bounds, to: self.view)
+        selectedImageFrame = cell.leftIamgeView.convert(cell.leftIamgeView.bounds, to: self.view)
+        selectedString = cell.middleLabel.text
+        
+        detail.image = cell.leftIamgeView.image
+        detail.detailText = cell.middleLabel.text
+        self.present(detail, animated: true)
+        
     }
 }
