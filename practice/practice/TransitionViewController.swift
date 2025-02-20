@@ -13,7 +13,47 @@ extension ViewController: UIViewControllerTransitioningDelegate {
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
-        return nil
+        return DismissTransitionAnimator()
+    }
+}
+
+class DismissTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+    func transitionDuration(using transitionContext: (any UIViewControllerContextTransitioning)?) -> TimeInterval {
+        return 3
+    }
+    
+    func animateTransition(using transitionContext: any UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        
+        let detailVC = transitionContext.viewController(forKey: .from) as! DetailViewController
+        let homeVC = transitionContext.viewController(forKey: .to) as! ViewController
+        
+        let imageView = UIImageView()
+        imageView.frame = detailVC.bigImageView.frame
+        imageView.image = detailVC.bigImageView.image
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        
+        containerView.addSubview(imageView)
+        
+        let myLabel = UILabel()
+        myLabel.frame = detailVC.detailLabel.frame
+        myLabel.text = detailVC.detailLabel.text
+        containerView.addSubview(myLabel)
+        
+        detailVC.view.alpha = 0
+        let duration = transitionDuration(using: transitionContext)
+        
+        UIView.animate(withDuration: duration) {
+            imageView.frame = homeVC.selectedImageFrame!
+            myLabel.frame = homeVC.selectedLabelFrame!
+            
+            
+        } completion: { _ in
+            myLabel.removeFromSuperview()
+            imageView.removeFromSuperview()
+            transitionContext.completeTransition(true)
+        }
     }
 }
 
