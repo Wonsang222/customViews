@@ -31,11 +31,15 @@ class ViewController: UIViewController {
     var selectedLabelFrame: CGRect?
     var selectedString: String?
     
-    func tableView() {
-        transitTableView.delegate = self
-        transitTableView.dataSource = self
-    }
+    let patternView = PatternView()
+    let barGraphView = BarGraphView()
     
+//
+//    func tableView() {
+//        transitTableView.delegate = self
+//        transitTableView.dataSource = self
+//    }
+//    
 //    @IBAction func reset(_ sender: Any) {
 //        imgView.image = nil
 //        progView.rate = 0
@@ -117,10 +121,57 @@ class ViewController: UIViewController {
 //        collectionView.heightAnchor.constraint(equalToConstant: 250).isActive = true
 //        
 //    }
+//    
+//    func pattern() {
+//        self.view.addSubview(patternView)
+//        
+//        patternView.translatesAutoresizingMaskIntoConstraints = false
+//        patternView.backgroundColor = .orange
+//        
+//        patternView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+//        patternView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+//        
+//        patternView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+//        patternView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+//        
+//        
+//    }
+    
+    private func graph() {
+        self.view.addSubview(barGraphView)
+        barGraphView.backgroundColor = .orange
+        barGraphView.barPercents = [0.5, 0.6, 0.3,0.7]
+        barGraphView.translatesAutoresizingMaskIntoConstraints = false
+        
+        barGraphView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        barGraphView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        barGraphView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        barGraphView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        
+        let randomValueButton = UIButton()
+        self.view.addSubview(randomValueButton)
+        randomValueButton.translatesAutoresizingMaskIntoConstraints = false
+        randomValueButton.rightAnchor.constraint(equalTo: barGraphView.rightAnchor).isActive = true
+        randomValueButton.topAnchor.constraint(equalTo: barGraphView.bottomAnchor, constant: 30).isActive = true
+        randomValueButton.setTitle("Random", for: .normal)
+        randomValueButton.setTitleColor(.black, for: .normal)
+        randomValueButton.addTarget(self, action: #selector(randomValue), for: .touchUpInside)
+    }
+    
+    @objc func randomValue() {
+        let randomValue = (0..<4).map { _ in
+            CGFloat.random(in: 0...1)
+        }
+        barGraphView.barPercents = randomValue
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView()
+        graph()
+//        pattern()
+//        tableView()
         
 //        setupCollectionView()
         
@@ -234,37 +285,37 @@ class ViewController: UIViewController {
 
 
 
-
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 30
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TableImageCell", for: indexPath) as! TableImageCell
-        cell.leftIamgeView.image = UIImage(named: "fashion\(indexPath.row % 18 + 1)")
-        cell.middleLabel.text = "Fashion\(indexPath.row + 1)"
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detail = self.storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-        detail.transitioningDelegate = self
-        detail.modalPresentationStyle = .custom
-        
-        let cell = tableView.cellForRow(at: indexPath) as! TableImageCell
-        self.selectedImage = cell.leftIamgeView.image
-        self.selectedLabelFrame = cell.middleLabel.convert(cell.middleLabel.bounds, to: self.view)
-        selectedImageFrame = cell.leftIamgeView.convert(cell.leftIamgeView.bounds, to: self.view)
-        selectedString = cell.middleLabel.text
-        
-        detail.image = cell.leftIamgeView.image
-        detail.detailText = cell.middleLabel.text
-        self.present(detail, animated: true)
-        
-    }
-}
+//
+//extension ViewController: UITableViewDelegate, UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return 30
+//    }
+//    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "TableImageCell", for: indexPath) as! TableImageCell
+//        cell.leftIamgeView.image = UIImage(named: "fashion\(indexPath.row % 18 + 1)")
+//        cell.middleLabel.text = "Fashion\(indexPath.row + 1)"
+//        return cell
+//    }
+//    
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 100
+//    }
+//    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let detail = self.storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+//        detail.transitioningDelegate = self
+//        detail.modalPresentationStyle = .custom
+//        
+//        let cell = tableView.cellForRow(at: indexPath) as! TableImageCell
+//        self.selectedImage = cell.leftIamgeView.image
+//        self.selectedLabelFrame = cell.middleLabel.convert(cell.middleLabel.bounds, to: self.view)
+//        selectedImageFrame = cell.leftIamgeView.convert(cell.leftIamgeView.bounds, to: self.view)
+//        selectedString = cell.middleLabel.text
+//        
+//        detail.image = cell.leftIamgeView.image
+//        detail.detailText = cell.middleLabel.text
+//        self.present(detail, animated: true)
+//        
+//    }
+//}
